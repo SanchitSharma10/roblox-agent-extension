@@ -1,4 +1,4 @@
-app = "roblox-agent"  # You can change this to your preferred app name
+app = "roblox-economy"  # You can change this to your preferred app name
 
 kill_signal = "SIGINT"
 kill_timeout = 5
