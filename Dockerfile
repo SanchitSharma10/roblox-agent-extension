@@ -1,5 +1,4 @@
 FROM python:3.9
-
 WORKDIR /app
 
 # Install system dependencies
@@ -17,5 +16,15 @@ COPY . .
 # Expose the port
 EXPOSE 8080
 
-# Run the application
-CMD ["uvicorn", "improved_app:app", "--host", "0.0.0.0", "--port", "8080"]
+# Create a startup script
+RUN echo '#!/bin/bash\n\
+# Start ADK API server in background\n\
+adk api_server --port 3000 --host 0.0.0.0 &\n\
+# Wait a moment for ADK to start\n\
+sleep 5\n\
+# Start the web app\n\
+python improved_app.py\n\
+' > /app/start.sh && chmod +x /app/start.sh
+
+# Run the startup script
+CMD ["/app/start.sh"]
