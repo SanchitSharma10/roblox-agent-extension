@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
 COPY improved_app.py .
 COPY roblox-economy.js ./static/roblox-economy.js
 COPY robloxorchestrator/ ./robloxorchestrator/
