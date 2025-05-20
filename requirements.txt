@@ -1,7 +1,7 @@
-fastapi==0.103.1
+fastapi
 uvicorn>=0.34.0  # Updated to meet google-adk requirements
-httpx==0.24.1
-websockets==11.0.3
-google-adk==0.2.0
+httpx
+websockets
+google-adk
 supabase==1.0.4
 python-dotenv==1.0.0
