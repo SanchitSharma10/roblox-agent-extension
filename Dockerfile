@@ -28,10 +28,10 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Set environment variables
 ENV ADK_API_URL="http://localhost:3000"
 ENV APP_NAME="robloxorchestrator"
-ENV PORT=8000
+ENV PORT=8080
 
 # Expose port for web application
-EXPOSE 8000
+EXPOSE 8080
 
 # Use supervisord to manage both processes
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
