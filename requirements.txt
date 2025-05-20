@@ -1,7 +1,6 @@
 fastapi==0.103.1
 uvicorn==0.23.2
-httpx==0.24.1  # This version is compatible with supabase
+httpx==0.24.1
 websockets==11.0.3
 google-adk==0.2.0
 supabase==1.0.4
-python-dotenv==1.0.0
