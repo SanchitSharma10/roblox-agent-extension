@@ -13,16 +13,9 @@ requests
 plotly
 seaborn
 dotenv
-datetime
-typing
-io
-base64
 pytrends
 scipy
 feedparser
 asyncio
 aiohttp
-re
-collections
-hashlib
 googleapiclient
