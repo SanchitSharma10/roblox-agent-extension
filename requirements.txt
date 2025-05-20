@@ -6,3 +6,8 @@ google-adk>=0.5.0
 python-multipart>=0.0.6
 asyncio>=3.4.3
 supabase>=1.0.4
+matplotlib
+pandas
+numpy
+requests
+plotly
