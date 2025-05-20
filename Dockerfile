@@ -2,36 +2,20 @@ FROM python:3.9
 
 WORKDIR /app
 
-# Install system dependencies 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
     build-essential \
-    curl \
-    supervisor \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Copy requirements first for better caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY improved_app.py .
-COPY roblox-economy.js
-COPY robloxorchestrator/ ./robloxorchestrator/
+# Copy the application code
+COPY . .
 
-# Create directory for static files
-RUN mkdir -p /app/static
+# Expose the port
+EXPOSE 8080
 
-# Create supervisord configuration
-RUN mkdir -p /var/log/supervisor
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Expose port for web application
-EXPOSE 8000
-
-# Set environment variables
-ENV ADK_API_URL="http://localhost:3000"
-ENV APP_NAME="robloxorchestrator"
-ENV PORT=8000
-
-# Use supervisord to manage both processes
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Run the application
+CMD ["uvicorn", "improved_app:app", "--host", "0.0.0.0", "--port", "8080"]
