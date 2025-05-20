@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY improved_app.py .
-COPY roblox-economy.js ./static/roblox-economy.js
+COPY roblox-economy.js
 COPY robloxorchestrator/ ./robloxorchestrator/
 
 # Create directory for static files
