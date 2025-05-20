@@ -5,8 +5,8 @@ kill_timeout = 5
 processes = []
 
 [env]
-  PORT = "8000"
-  ADK_API_URL = "http://localhost:3000"
+  PORT = "8080"  # Change from 8000 to 8080
+  ADK_API_URL = "http://localhost:3000" 
   APP_NAME = "robloxorchestrator"
 
 [experimental]
@@ -14,7 +14,7 @@ processes = []
 
 [[services]]
   http_checks = []
-  internal_port = 8000
+  internal_port = 8080  # Change from 8000 to 8080
   processes = ["app"]
   protocol = "tcp"
   script_checks = []
@@ -38,3 +38,4 @@ processes = []
     interval = "15s"
     restart_limit = 0
     timeout = "2s"
+
