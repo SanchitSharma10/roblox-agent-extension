@@ -1,5 +1,5 @@
 fastapi==0.103.1
-uvicorn==0.23.2
+uvicorn>=0.34.0  # Updated to meet google-adk requirements
 httpx==0.24.1
 websockets==11.0.3
 google-adk==0.2.0
