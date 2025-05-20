@@ -5,4 +5,4 @@ websockets>=11.0.3
 google-adk>=0.5.0
 python-multipart>=0.0.6
 asyncio>=3.4.3
-supabase==1.0.4
+supabase>=1.0.4
