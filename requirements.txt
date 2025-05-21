@@ -18,4 +18,4 @@ scipy
 feedparser
 asyncio
 aiohttp
-googleapiclient
+google-api-python-client
