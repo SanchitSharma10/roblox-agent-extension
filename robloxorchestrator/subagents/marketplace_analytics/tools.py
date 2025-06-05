@@ -6,10 +6,14 @@ Database query functions for marketplace_items table with ADK-compatible signatu
 
 import os
 import json
+import logging
 from typing import Dict, List, Any, Optional, Union
 from supabase import create_client, Client
 from dotenv import load_dotenv, find_dotenv
 from datetime import datetime, timedelta
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 # Try to load environment variables from multiple possible locations
 env_loaded = False
@@ -49,7 +53,39 @@ class MarketplaceDB:
         self.supabase: Client = create_client(supabase_url, supabase_key)
 
     def execute_sql_query(self, sql_query: str, parameters_json: str = "{}"):
-        """Execute raw SQL query on Supabase"""
+        """Execute raw SQL query on Supabase - SECURITY RESTRICTED"""
+        
+        # SECURITY: Only allow pre-approved safe queries
+        SAFE_QUERIES = {
+            'top_by_value': """
+                SELECT name, price, rap, rolimons_value, demand, rarity_score, creator_name
+                FROM marketplace_items 
+                WHERE rolimons_value IS NOT NULL AND rolimons_value > 0
+                ORDER BY rolimons_value DESC 
+                LIMIT 20
+            """,
+            'trending_analysis': """
+                SELECT name, price, trend, trend_direction, demand
+                FROM marketplace_items 
+                WHERE trend IS NOT NULL
+                ORDER BY trend DESC 
+                LIMIT 15
+            """
+        }
+        
+        # Security check: only allow whitelisted queries
+        sql_normalized = ' '.join(sql_query.split())  # Normalize whitespace
+        is_safe = any(sql_normalized.strip() == ' '.join(safe_sql.split()) 
+                     for safe_sql in SAFE_QUERIES.values())
+        
+        if not is_safe:
+            logger.warning(f"SECURITY: Blocked unsafe SQL query: {sql_query[:100]}...")
+            return {
+                'success': False,
+                'error': 'SQL query not in whitelist - security restriction',
+                'timestamp': datetime.now().isoformat()
+            }
+        
         try:
             # Parse parameters from JSON string
             parameters = json.loads(parameters_json) if parameters_json else {}
@@ -67,6 +103,7 @@ class MarketplaceDB:
                 'timestamp': datetime.now().isoformat()
             }
         except Exception as e:
+            logger.error(f"SQL execution error: {str(e)}")
             return {
                 'success': False,
                 'error': str(e),
@@ -168,11 +205,15 @@ class MarketplaceDB:
                 }
             
             elif query_type == "custom_sql":
-                # Handle custom SQL queries
-                if params and 'sql' in params:
-                    return self.execute_sql_query(params['sql'], params.get('parameters', '{}'))
-                else:
-                    return {'error': 'No SQL query provided'}
+                # SECURITY FIX: REMOVED DANGEROUS SQL EXECUTION
+                # This was a critical SQL injection vulnerability!
+                return {
+                    'success': False,
+                    'error': 'Custom SQL queries disabled for security',
+                    'message': 'Use predefined query types instead',
+                    'available_types': ['trending_items', 'top_by_value', 'high_demand_low_price'],
+                    'timestamp': datetime.now().isoformat()
+                }
             
             else:
                 # Default: return recent items
