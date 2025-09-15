@@ -1,6 +1,8 @@
 # Roblox Economy Extension
 
-A Chrome extension that provides insights into the Roblox virtual economy through AI-powered analysis.
+A Chrome extension that provides insights into the Roblox virtual economy through AI-powered analysis. 
+While it is a WIP, you can access the link here: https://roblox-agent-extension.fly.dev/
+- The chat may not work right away and give an error. It just means the server was asleep. Try it again in a few minutes and it should be working!
 
 ## Features
 
