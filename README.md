@@ -1,6 +1,6 @@
-# Roblox Economy Extension
+# Roblox Economy Google ADK Agent
 
-A Chrome extension that provides insights into the Roblox virtual economy through AI-powered analysis. 
+An Agentic application that provides insights into the Roblox virtual economy through AI-powered analysis. 
 While it is a WIP, you can access the link here: https://roblox-agent-extension.fly.dev/
 - The chat may not work right away and give an error. It just means the server was asleep. Try it again in a few minutes and it should be working!
 
@@ -11,11 +11,15 @@ While it is a WIP, you can access the link here: https://roblox-agent-extension.
 - Google search trends analysis
 - RSS feeds monitoring for Roblox news and updates
 
+## Media
+Example of analyzing a specific game via youtube metrics:
+<img width="1031" height="460" alt="image" src="https://github.com/user-attachments/assets/b58acc4f-b2f4-4260-aa66-fd7fc16a4441" />
+<img width="1032" height="453" alt="image" src="https://github.com/user-attachments/assets/fd31a9b2-91a1-4955-9844-4e01c1825a28" />
+
+
 ## Deployment
 
 This application is designed to be deployed on Fly.io. See the Dockerfile and fly.toml for configuration details.
-
-## Development
 
 To run locally:
 
