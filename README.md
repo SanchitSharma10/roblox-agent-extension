@@ -6,6 +6,8 @@ While it is a WIP, you can access the link here: https://roblox-agent-extension.
 
   Built with Google ADK—following best practices from ADK Documentation (https://google.github.io/adk-docs/) and MCP Tool Integration Guide(https://google.github.io/adk-docs/tools/mcp-tools/).
 
+
+
 ## Features
 
 - Updated analysis of Roblox marketplace data (credit: Rolimons)
@@ -17,6 +19,10 @@ While it is a WIP, you can access the link here: https://roblox-agent-extension.
 Example of analyzing a specific game via youtube metrics:
 <img width="1031" height="460" alt="image" src="https://github.com/user-attachments/assets/b58acc4f-b2f4-4260-aa66-fd7fc16a4441" />
 <img width="1032" height="453" alt="image" src="https://github.com/user-attachments/assets/fd31a9b2-91a1-4955-9844-4e01c1825a28" />
+
+
+
+https://github.com/user-attachments/assets/d07ec2c6-433f-480a-bca3-7a72ae9daf10
 
 
 ## Deployment
