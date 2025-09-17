@@ -4,6 +4,8 @@ An Agentic application that provides insights into the Roblox virtual economy th
 While it is a WIP, you can access the link here: https://roblox-agent-extension.fly.dev/
 - The chat may not work right away and give an error. It just means the server was asleep. Try it again in a few minutes and it should be working!
 
+  Built with Google ADK—following best practices from ADK Documentation (https://google.github.io/adk-docs/) and MCP Tool Integration Guide(https://google.github.io/adk-docs/tools/mcp-tools/).
+
 ## Features
 
 - Updated analysis of Roblox marketplace data (credit: Rolimons)
