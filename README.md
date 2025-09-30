@@ -13,6 +13,8 @@ An Agentic application that provides insights into the Roblox virtual economy th
 - **Provides**: Investment opportunities, trend predictions, and price alerts within seconds
 - **Saves**: 10+ hours/week of manual research per studio
 
+  
+
 ## 🚀 Live Demo
 
 **Try it**: https://roblox-agent-extension.fly.dev/
