@@ -67,6 +67,27 @@ To run locally:
 
 Built with Google ADK—following best practices from ADK Documentation (https://google.github.io/adk-docs/) and MCP Tool Integration Guide(https://google.github.io/adk-docs/tools/mcp-tools/).
 
+## 📊 Example Output
+
+**Marketplace Investment Opportunities**:
+```json
+{
+  "item": "Sparkle Time Fedora",
+  "current_rap": 156000,
+  "predicted_roi": "23% in 30 days",
+  "reasoning": "YouTube mentions up 300%, Google Trends showing sustained interest",
+  "confidence": 0.87
+}
+
+## Trending Games Alert
+{
+  "game": "Adopt Me",
+  "ccu_growth": "+45% this week",
+  "youtube_mentions": 847,
+  "trend": "New pet update driving traffic",
+  "action": "Monitor for limited item drops"
+}
+
 ## License
 
 MIT
