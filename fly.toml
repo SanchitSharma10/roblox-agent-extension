@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for roblox-agent-extension on 2025-05-20T22:36:25Z
+# fly.toml app configuration file generated for roblox-agent-extension on 2025-05-20T22:54:41Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
 app = 'roblox-agent-extension'
-primary_region = 'iad'
+primary_region = 'bos'
 
 [build]
 
