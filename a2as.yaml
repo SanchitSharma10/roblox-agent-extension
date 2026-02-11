@@ -1,0 +1,941 @@
+manifest:
+  version: "0.1.3"
+  schema: https://a2as.org/cert/schema
+  subject:
+    name: sanchitsharma10/roblox-agent-extension
+    source: https://github.com/sanchitsharma10/roblox-agent-extension
+    branch: main
+    commit: "3620ad83"
+    scope: [robloxorchestrator/agent-base.py, robloxorchestrator/agent.py, robloxorchestrator/subagents/google_trends/agent.py,
+      robloxorchestrator/subagents/google_trends/instructions.py, robloxorchestrator/subagents/google_trends/tools.py, robloxorchestrator/subagents/marketplace_analytics/adk_config.py,
+      robloxorchestrator/subagents/marketplace_analytics/agent.py, robloxorchestrator/subagents/marketplace_analytics/instructions.py,
+      robloxorchestrator/subagents/marketplace_analytics/tools.py, robloxorchestrator/subagents/marketplace_analytics/visualization_tools.py,
+      robloxorchestrator/subagents/rss_monitor/agent.py, robloxorchestrator/subagents/rss_monitor/instructions.py, robloxorchestrator/subagents/rss_monitor/tools.py,
+      robloxorchestrator/subagents/youtube_analytics/agent.py, robloxorchestrator/subagents/youtube_analytics/instructions.py,
+      robloxorchestrator/subagents/youtube_analytics/tools.py]
+  issued:
+    by: A2AS.org
+    at: '2026-02-11T16:57:51Z'
+    url: https://a2as.org/certified/agents/sanchitsharma10/roblox-agent-extension
+  signatures:
+    digest: sha256:6K2kSNLXppTz3Ff15djRPt765vDsvK-E3JGo767eNGU
+    key: ed25519:nME4l9xyKTeFYiDjmxeoDBJSZDR45K5e-2AIhhbC_e8
+    sig: ed25519:IrhnRh7sLKvWIzXiooIo4sTG0TRjwaQ-EyPIGKl-LyT9UiVAncJ3KQkuCyWpNEzqq_LjHNxRFxpSmPndZs7xBg
+
+agents:
+  comprehensive_analysis_workflow:
+    type: instance
+    params:
+      name: comprehensive_analysis
+      sub_agents: [parallel_analyzer, result_synthesizer]
+  google_trends_agent:
+    type: instance
+    models: [gemini-2.0-flash-exp]
+    tools: [get_roblox_search_trends, analyze_item_search_patterns, track_seasonal_trends, compare_game_trends, detect_viral_events,
+      get_regional_trend_analysis, analyze_regional_growth_markets, create_trends_report]
+    params:
+      name: google_trends_system
+      description: Analyzes Google search trends to predict and correlate with Roblox economy movements
+      instruction: return_instructions_trends()
+      output_key: trends_results
+  google_trends_agent_copy:
+    type: instance
+    models: [google_trends_agent.model]
+    tools: [google_trends_agent.tools]
+    params:
+      name: google_trends_parallel
+      instruction: google_trends_agent.instruction
+      description: google_trends_agent.description
+      output_key: trends_results
+  marketplace_agent.0:
+    type: instance
+    models: [gemini-2.0-flash-exp]
+    tools: [call_marketplace_agent, get_market_summary, get_trending_items, get_high_value_items, get_high_value_items_sql,
+      find_investment_opportunities, analyze_rare_items, search_marketplace_items, execute_custom_sql, advanced_marketplace_query,
+      create_marketplace_visualization, generate_trend_report_with_charts]
+    params:
+      name: marketplace_analytics_with_code_interpreter
+      description: Advanced Roblox marketplace analytics with Code Interpreter for dynamic visualizations, SQL queries, and
+        comprehensive market intelligence
+      instruction: enhanced_instructions
+      code_executor: VertexAiCodeExecutor
+      instance: marketplace_agent
+  marketplace_agent.1:
+    type: instance
+    models: [gemini-2.0-flash-exp]
+    tools: [call_marketplace_agent, get_market_summary, get_trending_items, get_high_value_items, get_high_value_items_sql,
+      find_investment_opportunities, analyze_rare_items, search_marketplace_items, execute_custom_sql, advanced_marketplace_query,
+      create_marketplace_visualization, generate_trend_report_with_charts]
+    params:
+      name: marketplace_analytics_system_enhanced
+      description: Advanced Roblox marketplace analytics with visualization, SQL queries, and comprehensive market intelligence
+      instruction: return_instructions_marketplace()
+      instance: marketplace_agent
+  marketplace_agent.2:
+    type: instance
+    models: [gemini-2.0-flash-exp]
+    tools: [call_marketplace_agent, get_market_summary, get_trending_items, get_high_value_items, get_high_value_items_sql,
+      find_investment_opportunities, analyze_rare_items, search_marketplace_items, execute_custom_sql, advanced_marketplace_query,
+      create_marketplace_visualization, generate_trend_report_with_charts]
+    params:
+      name: marketplace_analytics_system_enhanced
+      description: Advanced Roblox marketplace analytics with visualization, SQL queries, and comprehensive market intelligence
+      instruction: return_instructions_marketplace()
+      output_key: marketplace_results
+      instance: marketplace_agent
+  marketplace_agent_copy:
+    type: instance
+    models: [marketplace_agent.model]
+    tools: [marketplace_agent.tools]
+    params:
+      name: marketplace_analytics_parallel
+      instruction: marketplace_agent.instruction
+      description: marketplace_agent.description
+      output_key: marketplace_results
+  parallel_analyzer:
+    type: instance
+    params:
+      name: parallel_economy_analyzer
+      sub_agents: [marketplace_agent_copy, youtube_agent_copy, google_trends_agent_copy, rss_monitor_agent_copy]
+  result_synthesizer:
+    type: instance
+    models: [gemini-2.0-flash-exp]
+    params:
+      name: economy_synthesizer
+      instruction: [You are a synthesizer that combines results from multiple Roblox economy analysis sources., 'You have
+          access to the following information in the shared state:', '- marketplace_results: Analysis of Roblox marketplace
+          data', '- youtube_results: Analysis of Roblox content on YouTube', '- trends_results: Analysis of search trends
+          for Roblox', '- rss_results: Recent Roblox news and announcements', 'Create a comprehensive, well-structured summary
+          that integrates all this information.', Highlight connections between different data sources and important trends.,
+        'IMPORTANT FORMATTING INSTRUCTIONS:', '- Use simple, well-spaced text formatting', '- Use clear headers with double
+          newlines before and single newline after', '- Use bullet points (•) for lists', '- Use dashes (-) for sub-points',
+        '- Add extra line breaks between sections', '- Do NOT use HTML or markdown formatting for comprehensive analysis']
+      output_key: final_synthesis
+  root_agent.0:
+    type: instance
+    models: [gemini-2.0-flash-exp]
+    params:
+      name: roblox_economy_orchestrator
+      description: Orchestrator agent for Roblox economy analysis that coordinates specialized subagents
+      instruction: [You are an AI assistant specializing in the Roblox virtual economy. Your task is to orchestrate, the analysis
+          of Roblox economy data by routing queries to specialized subagents and combining their results., 'You have these
+          specialized subagents at your disposal:', '1. MARKETPLACE ANALYTICS AGENT:', '- Specializes in analyzing Roblox''s
+          marketplace data (items, prices, trends)', '- Use for queries about: item values, prices, limited items, collectibles,
+          marketplace trends,', 'trading activity, item demand, avatars, accessories, and catalog items', '2. YOUTUBE ANALYTICS
+          AGENT:', '- Specializes in analyzing Roblox content on YouTube', '- Use for queries about: popular Roblox creators,
+          trending videos, game popularity on YouTube,', 'content trends, and video engagement metrics', '3. GOOGLE TRENDS
+          AGENT:', '- Specializes in analyzing search interest in Roblox-related topics', '- Use for queries about: search
+          interest trends, regional popularity, demographic insights,', and comparing interest in different Roblox games or
+          features, '4. RSS MONITOR AGENT:', '- Specializes in tracking Roblox news, announcements, and developer updates',
+        '- Use for queries about: recent updates, patch notes, DevForum discussions, blog posts,', and official announcements,
+        'Your workflow:', 1. ANALYZE the user's query to determine which subagent(s) can best handle it, 2. ROUTE the query
+          to the appropriate subagent(s), 3. COMBINE the results from multiple subagents (if applicable), 4. GENERATE a comprehensive
+          summary, 5. RETURN a structured response with both the summary and detailed data, 'When handling queries:', 'For
+          SINGLE-DOMAIN queries (clearly about one area):', '- Identify the most appropriate specialized agent', '- Transfer
+          the query to that agent using transfer_to_agent', 'For COMPREHENSIVE QUERIES (asking for broad overviews or analyses
+          across multiple domains):', '- Transfer to the comprehensive_analysis_workflow', '- Examples: "Give me a complete
+          analysis of the Roblox economy" or "What''s happening across Roblox right now"', 'When responding:', '- Present
+          a clear, concise summary at the beginning', '- Organize detailed information logically', '- Format numbers in a
+          readable way (e.g., 1.2M instead of 1,200,000)', '- Identify connections or contradictions between different data
+          sources', '- Maintain a helpful, informative tone', 'Your ultimate goal is to provide comprehensive, accurate insights
+          into the Roblox economy', by leveraging the specialized capabilities of each subagent.]
+      sub_agents: [marketplace_agent, youtube_agent, google_trends_agent, rss_monitor_agent]
+      instance: root_agent
+  root_agent.1:
+    type: instance
+    models: [gemini-2.0-flash-exp]
+    tools: [agent_tool, agent_tool, agent_tool]
+    params:
+      name: roblox_economy_orchestrator
+      description: Orchestrator agent for Roblox economy analysis that coordinates specialized agents and tools
+      instruction: [You are an AI assistant specializing in the Roblox virtual economy. Your task is to orchestrate, the analysis
+          of Roblox economy data by working with specialized agents and tools., 'You are responsible for delegating tasks
+          to the following agents:', '- marketplace_analytics: For analyzing Roblox''s marketplace data (items, prices, trends)',
+        '- youtube_analytics: For analyzing Roblox content on YouTube', 'You also have access to the following tools:', '-
+          google_trends: For analyzing search interest in Roblox-related topics', '- rss_monitor: For tracking Roblox news,
+          announcements, and developer updates', '- comprehensive_analysis: For broad, multi-domain queries about the entire
+          Roblox economy', 'For single-domain queries, use the appropriate agent or tool.', 'For comprehensive queries, use
+          the comprehensive_analysis tool.', Your ultimate goal is to provide accurate insights into the Roblox economy, by
+          leveraging these specialized capabilities.]
+      instance: root_agent
+      sub_agents: [marketplace_agent, youtube_agent]
+  rss_monitor_agent:
+    type: instance
+    models: [gemini-2.0-flash-exp]
+    tools: [monitor_roblox_feeds, analyze_economy_news, track_update_announcements, detect_policy_changes, get_competitor_news,
+      create_news_summary_report]
+    params:
+      name: rss_monitor_system
+      description: Monitors RSS feeds for Roblox economy news, updates, and policy changes
+      instruction: return_instructions_rss()
+      output_key: rss_results
+  rss_monitor_agent_copy:
+    type: instance
+    models: [rss_monitor_agent.model]
+    tools: [rss_monitor_agent.tools]
+    params:
+      name: rss_monitor_parallel
+      instruction: rss_monitor_agent.instruction
+      description: rss_monitor_agent.description
+      output_key: rss_results
+  youtube_agent:
+    type: instance
+    models: [gemini-2.0-flash-exp]
+    tools: [get_roblox_content_trends, analyze_creator_mentions, get_viral_roblox_videos, track_game_popularity, get_youtube_market_sentiment,
+      create_youtube_analytics_report]
+    params:
+      name: youtube_analytics_system
+      description: Analyzes YouTube content trends related to Roblox economy, items, and creator sentiment
+      instruction: return_instructions_youtube()
+      output_key: youtube_results
+  youtube_agent_copy:
+    type: instance
+    models: [youtube_agent.model]
+    tools: [youtube_agent.tools]
+    params:
+      name: youtube_analytics_parallel
+      instruction: youtube_agent.instruction
+      description: youtube_agent.description
+      output_key: youtube_results
+
+models:
+  gemini-2.0-flash-exp:
+    type: literal
+    agents: [root_agent.0, result_synthesizer, root_agent.1, marketplace_agent.0, marketplace_agent.1, marketplace_agent.2,
+      google_trends_agent, rss_monitor_agent, youtube_agent]
+  google_trends_agent.model:
+    type: literal
+    agents: [google_trends_agent_copy]
+  marketplace_agent.model:
+    type: literal
+    agents: [marketplace_agent_copy]
+  rss_monitor_agent.model:
+    type: literal
+    agents: [rss_monitor_agent_copy]
+  youtube_agent.model:
+    type: literal
+    agents: [youtube_agent_copy]
+
+tools:
+  advanced_marketplace_query:
+    type: function
+    agents: [marketplace_agent.0, marketplace_agent.1, marketplace_agent.2]
+    params:
+      description: "Execute advanced marketplace queries using SQL.\n\nArgs:\n    query_description: Description of what data\
+        \ to retrieve\n    \nReturns:\n    Dictionary with query results based on the description"
+  agent_tool:
+    type: agent
+    agents: [root_agent.1]
+    params:
+      wrapper: AgentTool
+  analyze_creator_mentions:
+    type: function
+    agents: [youtube_agent]
+    params:
+      description: "Analyze which Roblox creators are mentioning specific items.\n\nArgs:\n    item_names: List of item names\
+        \ to track (optional)\n    creator_filter: Filter by creator (all, top_creators, specific_channel)\n    \nReturns:\n\
+        \    Dictionary with creator mention analysis"
+  analyze_economy_news:
+    type: function
+    agents: [rss_monitor_agent]
+    params:
+      description: "Analyze economy-related news from RSS feeds.\n\nArgs:\n    time_period: Time period for analysis\n   \
+        \ focus_area: Specific area to focus on (general, policy, monetization, competition)\n    \nReturns:\n    Dictionary\
+        \ with economy news analysis"
+  analyze_item_search_patterns:
+    type: function
+    agents: [google_trends_agent]
+    params:
+      description: "Analyze search patterns for specific Roblox items.\n\nArgs:\n    item_names: List of item names to analyze\n\
+        \    timeframe: Time period for analysis\n    \nReturns:\n    Dictionary with item search pattern analysis"
+  analyze_rare_items:
+    type: function
+    agents: [marketplace_agent.0, marketplace_agent.1, marketplace_agent.2]
+    params:
+      description: |-
+        Get analysis of rare marketplace items.
+
+        Returns:
+            List of items with high rarity scores
+  analyze_regional_growth_markets:
+    type: function
+    agents: [google_trends_agent]
+    params:
+      description: "Identify emerging and growth markets for Roblox based on regional search trends.\n\nArgs:\n    keywords:\
+        \ List of keywords to analyze across regions\n    timeframe: Time period for analysis (must be at least 3m for meaningful\
+        \ growth analysis)\n    \nReturns:\n    Dictionary with emerging markets analysis"
+  call_marketplace_agent:
+    type: function
+    agents: [marketplace_agent.0, marketplace_agent.1, marketplace_agent.2]
+    params:
+      description: "Main marketplace analytics agent function.\n\nArgs:\n    request: Natural language request about marketplace\
+        \ data\n    \nReturns:\n    Dictionary containing marketplace analysis results"
+  compare_game_trends:
+    type: function
+    agents: [google_trends_agent]
+    params:
+      description: "Compare search trends between Roblox games to identify patterns and correlations.\n\nArgs:\n    game_names:\
+        \ List of Roblox game names to compare\n    timeframe: Time period for analysis (1d, 7d, 30d, 3m, 12m, 5y)\n    \n\
+        Returns:\n    Dictionary with comparative game trend analysis"
+  create_marketplace_visualization:
+    type: function
+    agents: [marketplace_agent.0, marketplace_agent.1, marketplace_agent.2]
+    params:
+      description: "Create visualizations for marketplace data.\n\nArgs:\n    data_type: Type of data to visualize (trending,\
+        \ valuable, demand_price, etc.)\n    chart_type: Type of chart (bar, scatter, line, pie, heatmap)\n    parameters:\
+        \ JSON string with additional parameters\n    \nReturns:\n    Dictionary with visualization data and base64 encoded\
+        \ image"
+  create_news_summary_report:
+    type: function
+    agents: [rss_monitor_agent]
+    params:
+      description: "Generate comprehensive news summary report from all RSS sources.\n\nArgs:\n    time_period: Time period\
+        \ for the report\n    \nReturns:\n    Dictionary with comprehensive news analysis"
+  create_trends_report:
+    type: function
+    agents: [google_trends_agent]
+    params:
+      description: "Generate comprehensive Google Trends report for Roblox economy.\n\nArgs:\n    timeframe: Time period for\
+        \ the report\n    report_type: Type of report (comprehensive, seasonal, regional, items)\n    \nReturns:\n    Dictionary\
+        \ with comprehensive trends analysis"
+  create_youtube_analytics_report:
+    type: function
+    agents: [youtube_agent]
+    params:
+      description: "Generate comprehensive YouTube analytics report.\n\nArgs:\n    time_period: Time period for the report\n\
+        \    \nReturns:\n    Dictionary with comprehensive YouTube analytics"
+  detect_policy_changes:
+    type: function
+    agents: [rss_monitor_agent]
+    params:
+      description: "Detect policy changes that might affect the Roblox economy.\n\nArgs:\n    time_period: Time period to\
+        \ scan for policy changes\n    \nReturns:\n    Dictionary with policy change detection results"
+  detect_viral_events:
+    type: function
+    agents: [google_trends_agent]
+    params:
+      description: "Detect viral events and spikes in Roblox-related search trends.\n\nArgs:\n    keywords: List of keywords\
+        \ to analyze for viral events\n    timeframe: Time period for analysis (1d, 7d, 30d, 3m, 12m, 5y)\n    threshold:\
+        \ Z-score threshold for viral event detection (higher = more selective)\n    \nReturns:\n    Dictionary with viral\
+        \ event analysis"
+  execute_custom_sql:
+    type: function
+    agents: [marketplace_agent.0, marketplace_agent.1, marketplace_agent.2]
+    params:
+      description: "Execute a custom SQL query on the marketplace database.\n\nArgs:\n    sql_query: The SQL query to execute\n\
+        \    parameters_json: Optional JSON string of parameters for the query\n    \nReturns:\n    Dictionary with query\
+        \ results"
+  find_investment_opportunities:
+    type: function
+    agents: [marketplace_agent.0, marketplace_agent.1, marketplace_agent.2]
+    params:
+      description: |-
+        Find undervalued items with high demand.
+
+        Returns:
+            List of items that have high demand but relatively low prices
+  generate_trend_report_with_charts:
+    type: function
+    agents: [marketplace_agent.0, marketplace_agent.1, marketplace_agent.2]
+    params:
+      description: "Generate a comprehensive trend report with multiple visualizations.\n\nArgs:\n    time_period: Time period\
+        \ for analysis (week, month, quarter)\n    \nReturns:\n    Dictionary with multiple charts and comprehensive analysis"
+  get_competitor_news:
+    type: function
+    agents: [rss_monitor_agent]
+    params:
+      description: "Monitor competitor news that might affect Roblox's market position.\n\nArgs:\n    time_period: Time period\
+        \ for monitoring\n    competitors: List of competitors to track\n    \nReturns:\n    Dictionary with competitor news\
+        \ analysis"
+  get_high_value_items:
+    type: function
+    agents: [marketplace_agent.0, marketplace_agent.1, marketplace_agent.2]
+    params:
+      description: |-
+        Get highest value marketplace items (fixed with better sorting).
+
+        Returns:
+            List of items with highest rolimons values, RAP, or prices
+  get_high_value_items_sql:
+    type: function
+    agents: [marketplace_agent.0, marketplace_agent.1, marketplace_agent.2]
+    params:
+      description: |-
+        Get highest value items using direct SQL query.
+
+        Returns:
+            List of highest value items using optimized SQL
+  get_market_summary:
+    type: function
+    agents: [marketplace_agent.0, marketplace_agent.1, marketplace_agent.2]
+    params:
+      description: |-
+        Get overall marketplace summary statistics.
+
+        Returns:
+            Dictionary with market summary data including total items, average prices, and total market value
+  get_regional_trend_analysis:
+    type: function
+    agents: [google_trends_agent]
+    params:
+      description: "Analyze regional differences in Roblox search trends.\n\nArgs:\n    keywords: Keywords to analyze across\
+        \ regions\n    regions: List of region codes (US, GB, CA, etc.)\n    timeframe: Time period for analysis\n    \nReturns:\n\
+        \    Dictionary with regional trend analysis"
+  get_roblox_content_trends:
+    type: function
+    agents: [youtube_agent]
+    params:
+      description: "Analyze trending Roblox content on YouTube.\n\nArgs:\n    time_period: Time period for analysis (day,\
+        \ week, month)\n    max_videos: Maximum number of videos to analyze\n    \nReturns:\n    Dictionary with trending\
+        \ content analysis"
+  get_roblox_search_trends:
+    type: function
+    agents: [google_trends_agent]
+    params:
+      description: "Get search trends for Roblox-related keywords.\n\nArgs:\n    keywords: List of keywords to analyze\n \
+        \   timeframe: Time period for analysis (1d, 7d, 30d, 3m, 12m, 5y)\n    region: Region for analysis (US, GB, CA, etc.)\n\
+        \    \nReturns:\n    Dictionary with trend analysis data"
+  get_trending_items:
+    type: function
+    agents: [marketplace_agent.0, marketplace_agent.1, marketplace_agent.2]
+    params:
+      description: |-
+        Get currently trending marketplace items.
+
+        Returns:
+            List of trending items with trend data
+  get_viral_roblox_videos:
+    type: function
+    agents: [youtube_agent]
+    params:
+      description: "Find viral Roblox videos that might indicate market trends.\n\nArgs:\n    min_views: Minimum view count\
+        \ to consider viral\n    time_period: Time period to analyze (day, week, month)\n    \nReturns:\n    Dictionary with\
+        \ viral video analysis"
+  get_youtube_market_sentiment:
+    type: function
+    agents: [youtube_agent]
+    params:
+      description: "Analyze sentiment around Roblox economy topics on YouTube.\n\nArgs:\n    keywords: Specific keywords to\
+        \ analyze sentiment for\n    \nReturns:\n    Dictionary with sentiment analysis"
+  google_trends_agent.tools:
+    type: function
+    agents: [google_trends_agent_copy]
+    params:
+      dynamic: "True"
+  marketplace_agent.tools:
+    type: function
+    agents: [marketplace_agent_copy]
+    params:
+      dynamic: "True"
+  monitor_roblox_feeds:
+    type: function
+    agents: [rss_monitor_agent]
+    params:
+      description: "Monitor Roblox-related RSS feeds for recent updates.\n\nArgs:\n    time_period: Time period to monitor\
+        \ (day, week, month)\n    category: Category of feeds to monitor (all, official, gaming_news, metaverse)\n    \nReturns:\n\
+        \    Dictionary with monitored feed data"
+  rss_monitor_agent.tools:
+    type: function
+    agents: [rss_monitor_agent_copy]
+    params:
+      dynamic: "True"
+  search_marketplace_items:
+    type: function
+    agents: [marketplace_agent.0, marketplace_agent.1, marketplace_agent.2]
+    params:
+      description: "Search marketplace items based on query.\n\nArgs:\n    query: Search query for marketplace items\n   \
+        \ \nReturns:\n    List of marketplace items matching the query context"
+  track_game_popularity:
+    type: function
+    agents: [youtube_agent]
+    params:
+      description: "Track popularity of specific Roblox games on YouTube.\n\nArgs:\n    game_names: List of game names to\
+        \ track\n    time_period: Time period for analysis\n    \nReturns:\n    Dictionary with game popularity analysis"
+  track_seasonal_trends:
+    type: function
+    agents: [google_trends_agent]
+    params:
+      description: "Track seasonal patterns in Roblox search trends.\n\nArgs:\n    keywords: Keywords to analyze for seasonality\n\
+        \    years_back: Number of years to look back\n    \nReturns:\n    Dictionary with seasonal trend analysis"
+  track_update_announcements:
+    type: function
+    agents: [rss_monitor_agent]
+    params:
+      description: "Track official Roblox update announcements that might affect the economy.\n\nArgs:\n    time_period: Time\
+        \ period to track updates\n    \nReturns:\n    Dictionary with update tracking data"
+  VertexAiCodeExecutor:
+    type: module
+    params:
+      class: VertexAiCodeExecutor
+  youtube_agent.tools:
+    type: function
+    agents: [youtube_agent_copy]
+    params:
+      dynamic: "True"
+
+teams:
+  comprehensive_analysis_workflow:
+    type: sequential
+    agents: [comprehensive_analysis_workflow, parallel_analyzer, result_synthesizer]
+  parallel_analyzer:
+    type: parallel
+    agents: [parallel_analyzer, marketplace_agent_copy, youtube_agent_copy, google_trends_agent_copy, rss_monitor_agent_copy]
+  root_agent:
+    type: hierarchy
+    agents: [root_agent, marketplace_agent, youtube_agent, google_trends_agent, rss_monitor_agent]
+  root_agent.1:
+    type: hierarchy
+    agents: [root_agent.1, marketplace_agent, youtube_agent]
+
+imports:
+  advanced_marketplace_query: tools.advanced_marketplace_query
+  Agent: google.adk.agents.Agent
+  agent: agent
+  AgentTool: google.adk.tools.agent_tool.AgentTool
+  aiohttp: aiohttp
+  analyze_creator_mentions: tools.analyze_creator_mentions
+  analyze_economy_news: tools.analyze_economy_news
+  analyze_item_search_patterns: tools.analyze_item_search_patterns
+  analyze_rare_items: tools.analyze_rare_items
+  analyze_regional_growth_markets: tools.analyze_regional_growth_markets
+  Any: typing.Any
+  asyncio: asyncio
+  base64: base64
+  build: googleapiclient.discovery.build
+  call_marketplace_agent: tools.call_marketplace_agent
+  Client: supabase.Client
+  compare_game_trends: tools.compare_game_trends
+  create_client: supabase.create_client
+  create_marketplace_visualization: visualization_tools.create_marketplace_visualization
+  create_news_summary_report: tools.create_news_summary_report
+  create_trends_report: tools.create_trends_report
+  create_youtube_analytics_report: tools.create_youtube_analytics_report
+  datetime: datetime.datetime
+  defaultdict: collections.defaultdict
+  detect_policy_changes: tools.detect_policy_changes
+  detect_viral_events: tools.detect_viral_events
+  Dict: typing.Dict
+  execute_custom_sql: tools.execute_custom_sql
+  feedparser: feedparser
+  find_dotenv: dotenv.find_dotenv
+  find_investment_opportunities: tools.find_investment_opportunities
+  generate_trend_report_with_charts: visualization_tools.generate_trend_report_with_charts
+  get_competitor_news: tools.get_competitor_news
+  get_db_instance: tools.get_db_instance
+  get_high_value_items: tools.get_high_value_items
+  get_high_value_items_sql: tools.get_high_value_items_sql
+  get_market_summary: tools.get_market_summary
+  get_regional_trend_analysis: tools.get_regional_trend_analysis
+  get_roblox_content_trends: tools.get_roblox_content_trends
+  get_roblox_search_trends: tools.get_roblox_search_trends
+  get_trending_items: tools.get_trending_items
+  get_viral_roblox_videos: tools.get_viral_roblox_videos
+  get_youtube_market_sentiment: tools.get_youtube_market_sentiment
+  google_trends_agent: subagents.google_trends.agent.google_trends_agent
+  hashlib: hashlib
+  io: io
+  json: json
+  List: typing.List
+  load_dotenv: dotenv.load_dotenv
+  logging: logging
+  marketplace_agent: subagents.marketplace_analytics.agent.marketplace_agent
+  mdates: matplotlib.dates
+  monitor_roblox_feeds: tools.monitor_roblox_feeds
+  np: numpy
+  Optional: typing.Optional
+  os: os
+  ParallelAgent: google.adk.agents.ParallelAgent
+  pd: pandas
+  plt: matplotlib.pyplot
+  re: re
+  return_instructions_marketplace: instructions.return_instructions_marketplace
+  return_instructions_rss: instructions.return_instructions_rss
+  return_instructions_trends: instructions.return_instructions_trends
+  return_instructions_youtube: instructions.return_instructions_youtube
+  rss_monitor_agent: subagents.rss_monitor.agent.rss_monitor_agent
+  search_marketplace_items: tools.search_marketplace_items
+  SequentialAgent: google.adk.agents.SequentialAgent
+  sns: seaborn
+  stats: scipy.stats
+  time: time
+  timedelta: datetime.timedelta
+  traceback: traceback
+  track_game_popularity: tools.track_game_popularity
+  track_seasonal_trends: tools.track_seasonal_trends
+  track_update_announcements: tools.track_update_announcements
+  TrendReq: pytrends.request.TrendReq
+  Tuple: typing.Tuple
+  Union: typing.Union
+  VertexAiCodeExecutor: google.adk.code_executors.VertexAiCodeExecutor
+  youtube_agent: subagents.youtube_analytics.agent.youtube_agent
+
+functions:
+  __init__:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [self]
+  advanced_marketplace_query:
+    type: async
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+    args: [query_description]
+  analyze_creator_mentions:
+    type: async
+    module: robloxorchestrator.subagents.youtube_analytics.tools
+    args: [item_names, creator_filter]
+  analyze_economy_news:
+    type: async
+    module: robloxorchestrator.subagents.rss_monitor.tools
+    args: [time_period, focus_area]
+  analyze_item_search_patterns:
+    type: async
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [item_names, timeframe]
+    params:
+      returns: Dict
+  analyze_rare_items:
+    type: async
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+  analyze_regional_growth_markets:
+    type: async
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [keywords, timeframe]
+    params:
+      returns: Dict
+  analyze_trend_correlation:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [self, df1, df2, col1, col2]
+    params:
+      returns: Dict
+  assess_competitor_impact:
+    type: sync
+    module: robloxorchestrator.subagents.rss_monitor.tools
+    args: [content]
+    params:
+      returns: str
+  call_marketplace_agent:
+    type: async
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+    args: [request]
+  compare_game_trends:
+    type: async
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [game_names, timeframe]
+    params:
+      returns: Dict
+  create_marketplace_visualization:
+    type: async
+    module: robloxorchestrator.subagents.marketplace_analytics.visualization_tools
+    args: [data_type, chart_type, parameters]
+  create_news_summary_report:
+    type: async
+    module: robloxorchestrator.subagents.rss_monitor.tools
+    args: [time_period]
+  create_trends_report:
+    type: async
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [timeframe, report_type]
+    params:
+      returns: Dict
+  create_youtube_analytics_report:
+    type: async
+    module: robloxorchestrator.subagents.youtube_analytics.tools
+    args: [time_period]
+  detect_policy_changes:
+    type: async
+    module: robloxorchestrator.subagents.rss_monitor.tools
+    args: [time_period]
+  detect_trend_anomalies:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [self, data, threshold]
+    params:
+      returns: List[Dict]
+  detect_viral_events:
+    type: async
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [keywords, timeframe, threshold]
+    params:
+      returns: Dict
+  execute_custom_sql:
+    type: async
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+    args: [sql_query, parameters_json]
+  execute_sql_query:
+    type: sync
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+    args: [self, sql_query, parameters_json]
+  extract_key_trends_insights:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [report_sections]
+    params:
+      returns: List[str]
+  fetch_feed:
+    type: async
+    module: robloxorchestrator.subagents.rss_monitor.tools
+    args: [self, feed_url, session]
+    params:
+      returns: Dict
+  fetch_multiple_feeds:
+    type: async
+    module: robloxorchestrator.subagents.rss_monitor.tools
+    args: [self, feed_list]
+    params:
+      returns: List[Dict]
+  filter_entries_by_keywords:
+    type: sync
+    module: robloxorchestrator.subagents.rss_monitor.tools
+    args: [self, entries, keywords, days_back]
+    params:
+      returns: List[Dict]
+  find_investment_opportunities:
+    type: async
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+  generate_chart_insights:
+    type: sync
+    module: robloxorchestrator.subagents.marketplace_analytics.visualization_tools
+    args: [df, data_type, chart_type]
+    params:
+      returns: List[str]
+  generate_executive_summary:
+    type: sync
+    module: robloxorchestrator.subagents.marketplace_analytics.visualization_tools
+    args: [market_summary, visualizations]
+    params:
+      returns: str
+  generate_item_insights:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [item_analysis]
+    params:
+      returns: List[str]
+  generate_news_executive_summary:
+    type: sync
+    module: robloxorchestrator.subagents.rss_monitor.tools
+    args: [report_sections]
+    params:
+      returns: str
+  generate_overall_seasonal_insights:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [seasonal_analysis]
+    params:
+      returns: List[str]
+  generate_seasonal_insights:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [monthly_avg, quarterly_avg]
+    params:
+      returns: List[str]
+  generate_trend_report_with_charts:
+    type: async
+    module: robloxorchestrator.subagents.marketplace_analytics.visualization_tools
+    args: [time_period]
+  generate_trends_executive_summary:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [report_sections]
+    params:
+      returns: str
+  generate_trends_recommendations:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [report_sections]
+    params:
+      returns: List[str]
+  generate_youtube_executive_summary:
+    type: sync
+    module: robloxorchestrator.subagents.youtube_analytics.tools
+    args: [report_sections]
+    params:
+      returns: str
+  get_channel_videos:
+    type: sync
+    module: robloxorchestrator.subagents.youtube_analytics.tools
+    args: [self, channel_id, max_results]
+    params:
+      returns: List[Dict]
+  get_competitor_news:
+    type: async
+    module: robloxorchestrator.subagents.rss_monitor.tools
+    args: [time_period, competitors]
+  get_db_instance:
+    type: sync
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+  get_high_value_items:
+    type: async
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+  get_high_value_items_sql:
+    type: async
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+  get_market_summary:
+    type: async
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+  get_regional_interest:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [self, keyword, timeframe]
+    params:
+      returns: pd.DataFrame
+  get_regional_trend_analysis:
+    type: async
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [keywords, regions, timeframe]
+    params:
+      returns: Dict
+  get_related_queries:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [self, keyword, timeframe, geo]
+    params:
+      returns: Dict
+  get_roblox_content_trends:
+    type: async
+    module: robloxorchestrator.subagents.youtube_analytics.tools
+    args: [time_period, max_videos]
+  get_roblox_search_trends:
+    type: async
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [keywords, timeframe, region]
+    params:
+      returns: Dict
+  get_rss_monitor:
+    type: sync
+    module: robloxorchestrator.subagents.rss_monitor.tools
+  get_trending_items:
+    type: async
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+  get_trends_analyzer:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+  get_trends_data:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [self, keywords, timeframe, geo, category]
+    params:
+      returns: pd.DataFrame
+  get_video_statistics:
+    type: sync
+    module: robloxorchestrator.subagents.youtube_analytics.tools
+    args: [self, video_ids]
+    params:
+      returns: Dict
+  get_viral_roblox_videos:
+    type: async
+    module: robloxorchestrator.subagents.youtube_analytics.tools
+    args: [min_views, time_period]
+  get_youtube_instance:
+    type: sync
+    module: robloxorchestrator.subagents.youtube_analytics.tools
+  get_youtube_market_sentiment:
+    type: async
+    module: robloxorchestrator.subagents.youtube_analytics.tools
+    args: [keywords]
+  monitor_roblox_feeds:
+    type: async
+    module: robloxorchestrator.subagents.rss_monitor.tools
+    args: [time_period, category]
+  query_marketplace_data:
+    type: sync
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+    args: [self, query_type, params]
+  return_instructions_marketplace:
+    type: sync
+    module: robloxorchestrator.subagents.marketplace_analytics.instructions
+  return_instructions_rss:
+    type: sync
+    module: robloxorchestrator.subagents.rss_monitor.instructions
+  return_instructions_trends:
+    type: sync
+    module: robloxorchestrator.subagents.google_trends.instructions
+  return_instructions_youtube:
+    type: sync
+    module: robloxorchestrator.subagents.youtube_analytics.instructions
+  search_marketplace_items:
+    type: async
+    module: robloxorchestrator.subagents.marketplace_analytics.tools
+    args: [query]
+  search_videos:
+    type: sync
+    module: robloxorchestrator.subagents.youtube_analytics.tools
+    args: [self, query, max_results, published_after]
+    params:
+      returns: List[Dict]
+  setup_before_agent_call:
+    type: sync
+    module: robloxorchestrator.subagents.youtube_analytics.agent
+    args: [callback_context]
+  track_game_popularity:
+    type: async
+    module: robloxorchestrator.subagents.youtube_analytics.tools
+    args: [game_names, time_period]
+  track_seasonal_trends:
+    type: async
+    module: robloxorchestrator.subagents.google_trends.tools
+    args: [keywords, years_back]
+    params:
+      returns: Dict
+  track_update_announcements:
+    type: async
+    module: robloxorchestrator.subagents.rss_monitor.tools
+    args: [time_period]
+
+variables:
+  ADK_MODEL:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [robloxorchestrator.subagents.marketplace_analytics.adk_config]
+  CODE_INTERPRETER_EXTENSION_NAME:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [robloxorchestrator.subagents.marketplace_analytics.agent]
+  GEMINI_API_KEY:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [robloxorchestrator.subagents.marketplace_analytics.adk_config]
+  GOOGLE_API_KEY:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [robloxorchestrator.subagents.marketplace_analytics.adk_config]
+  SUPABASE_ANON_KEY:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [robloxorchestrator.subagents.marketplace_analytics.tools]
+  SUPABASE_KEY:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [robloxorchestrator.subagents.marketplace_analytics.tools, robloxorchestrator.subagents.marketplace_analytics.adk_config]
+  SUPABASE_PROJECT_URL:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [robloxorchestrator.subagents.marketplace_analytics.tools]
+  SUPABASE_SERVICE_KEY:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [robloxorchestrator.subagents.marketplace_analytics.tools, robloxorchestrator.subagents.marketplace_analytics.adk_config]
+  SUPABASE_URL:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [robloxorchestrator.subagents.marketplace_analytics.tools, robloxorchestrator.subagents.marketplace_analytics.adk_config]
+  YOUTUBE_API_KEY:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [robloxorchestrator.subagents.youtube_analytics.tools]
+
+files:
+  .env:
+    type: literal
+    actions: [read]
+    params:
+      caller: [os.path.join]
